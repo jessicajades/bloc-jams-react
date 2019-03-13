@@ -7,13 +7,14 @@ class Album extends Component {
     super(props);
 
     const album = albumData.find( album => {
-      return album.slug === this.props.match.params.slug
+      return album.slug === this.props.match.params.slug;
     });
 
     this.state = {
       album: album,
       currentSong: album.songs[0],
-      isPlaying: false
+      isPlaying: false,
+      isHovered: false
     };
 
     this.audioElement = document.createElement('audio');
@@ -46,6 +47,21 @@ class Album extends Component {
     }
   }
 
+  onHover(index){
+    this.setState({isHovered: index});
+  }
+
+
+  hoverDisplay(song, index) {
+    if(index === this.state.isHovered) {
+      return <span className="icon ion-md-play"></span>
+    } else if(song === this.state.currentSong && this.state.isPlaying) {
+      return <span className="icon ion-md-pause"></span>
+    } else {
+      return index + 1;
+    }
+  }
+
   render() {
     return (
       <section className="album">
@@ -66,8 +82,14 @@ class Album extends Component {
           <tbody>
             {
               this.state.album.songs.map( (song, index) =>
-                <tr key={index} className="song" onClick={() => this.handleSongClick(song)}>
-                  <td>{index + 1}</td>
+                <tr
+                  key={index}
+                  className="song"
+                  onClick={() => this.handleSongClick(song)}
+                  onMouseEnter={() => this.onHover(index)}
+                  onMouseLeave={() => this.onHover(null)}
+                >
+                  <td>{this.hoverDisplay(song, index)}</td>
                   <td>{song.title}</td>
                   <td>{song.duration}</td>
                 </tr>
