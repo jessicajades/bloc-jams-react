@@ -23,7 +23,6 @@ class Album extends Component {
 
     this.audioElement = document.createElement('audio');
     this.audioElement.src = album.songs[0].audioSrc;
-
   }
 
   play() {
@@ -99,16 +98,12 @@ class Album extends Component {
   }
 
   formatTime(time){
-    if(typeof time === 'number') {
       var d = Number(time);
       var m = Math.floor(d % 3600 / 60);
       var s = Math.floor(d % 3600 % 60);
       var mDisplay = m > 0 ? ((m < 10 ? "0" : ":") + m + (m >= 0 ? ":" : ":")) : "00:";
       var sDisplay = s > 0 ? (s <= 9 ? "0" : "") + s : "00";
       return mDisplay + sDisplay;
-    } else {
-      return "-:--"
-    }
   }
 
   onHover(index){
@@ -118,20 +113,20 @@ class Album extends Component {
 
   hoverDisplay(song, index) {
     if(song === this.state.currentSong && this.state.isPlaying) {
-      return <span className="icon ion-md-pause"></span>
-    } else if(song === this.state.currentSong && this.state.isPlaying === false){
-      return <span className="icon ion-md-play"></span>
-    } else if(index === this.state.isHovered) {
-      return <span className="icon ion-md-play"></span>
-    } else {
-      return index + 1;
+      return <span className="icon-2 ion-md-pause"></span>
     }
+
+    if(index === this.state.isHovered) {
+      return <span className="icon-2 ion-md-play"></span>
+    }
+
+    return index + 1;
   }
 
   render() {
     return (
       <section className="album">
-        <section id="album-info">
+        <section id="album-info" className="album-info">
           <img id="album-cover-art" src={this.state.album.albumCover} alt={this.state.album.title} />
           <div className="album-details">
             <h1 id="album-title">{this.state.album.title}</h1>
@@ -150,14 +145,14 @@ class Album extends Component {
               this.state.album.songs.map( (song, index) =>
                 <tr
                   key={index}
-                  className="song"
+                  className="song border"
                   onClick={() => this.handleSongClick(song)}
                   onMouseEnter={() => this.onHover(index)}
                   onMouseLeave={() => this.onHover(null)}
                 >
                   <td>{this.hoverDisplay(song, index)}</td>
                   <td>{song.title}</td>
-                  <td>{song.duration}</td>
+                  <td>{this.formatTime(song.duration)}</td>
                 </tr>
               )
             }
